@@ -7,15 +7,20 @@ resources:
     target: {{director-address}}
     client: {{director-client}}
     client_secret: {{director-client-secret}}
-    deployment: test-deployment
+    deployment: {{deployment}}
 - name: stemcell
   type: bosh-io-stemcell
   source:
-    name: bosh-google-kvm-ubuntu-trusty-go_agent
+    name: {{ stemcell }}
 - name: release
   type: bosh-io-release
   source:
     repository: cloudfoundry-community/consul-boshrelease
+- name: bosh-deploy-pipeline
+  type: git
+  source:
+    uri: "https://github.com/hkumarmk/concourse-pipelines.git"
+    paths: [consul/*]
 
 resource_types:
 - name: bosh-deployment
@@ -29,11 +34,12 @@ jobs:
   - aggregate:
     - get: release
     - get: stemcell
+    - get: bosh-deploy-pipeline
   - put: consul-deployment
     params:
-      manifest: deployment.yml
+      manifest: bosh-deploy-pipeline/consul/deployment.yml
       vars_files:
-      - vars.yml
+      - bosh-deploy-pipeline/consul/example-vars.yml
       releases:
       - release/*.tgz
       stemcells:

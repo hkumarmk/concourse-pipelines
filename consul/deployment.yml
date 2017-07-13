@@ -19,7 +19,7 @@ stemcells:
 instance_groups:
 - name: consul
   azs: [z1]
-  instances: 3
+  instances: ((instances))
   vm_type: default
   networks:
   - name: default

@@ -1,0 +1,40 @@
+---
+resources:
+- name: consul-deployment
+  type: bosh-deployment
+  source:
+    ca_cert: {{director-ca-cert}}
+    target: {{director-address}}
+    client: {{director-client}}
+    client_secret: {{director-client-secret}}
+    deployment: test-deployment
+- name: stemcell
+  type: bosh-io-stemcell
+  source:
+    name: bosh-google-kvm-ubuntu-trusty-go_agent
+- name: release
+  type: bosh-io-release
+  source:
+    repository: cloudfoundry-community/consul-boshrelease
+
+resource_types:
+- name: bosh-deployment
+  type: docker-image
+  source:
+    repository: cloudfoundry/bosh-deployment-resource
+
+jobs:
+- name: deploy
+  plan:
+  - aggregate:
+    - get: release
+    - get: stemcell
+  - put: consul-deployment
+    params:
+      manifest: deployment.yml
+      vars_files:
+      - vars.yml
+      releases:
+      - release/*.tgz
+      stemcells:
+      - stemcell/*.tgz

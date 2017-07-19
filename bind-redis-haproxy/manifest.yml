@@ -1,0 +1,58 @@
+name: infra_services
+
+instance_groups:
+- name: redis
+  azs: [z1]
+  instances: 1
+  vm_type: default
+  stemcell: default
+  persistent_disk_type: default
+  networks: [{name: default}]
+  jobs:
+  - name: redis
+    release: redis
+    properties:
+      password: ((redis-password))
+- name: bind
+  azs: [z1]
+  instances: 1
+  vm_type: default
+  stemcell: default
+  persistent_disk_type: default
+  networks: [{name: default}]
+  jobs:
+  - name: bind9
+    release: bind9
+- name: haproxy
+  azs: [z1]
+  instances: 1
+  vm_type: default
+  stemcell: default
+  persistent_disk_type: default
+  networks: [{name: default}]
+  jobs:
+  - name: haproxy
+
+variables:
+- name: redis-password
+  type: password
+
+update:
+  canaries: 0
+  max_in_flight: 1
+  serial: true
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000
+
+stemcells:
+- alias: default
+  os: ubuntu-trusty
+  version: latest
+
+releases:
+- name: redis
+  version: latest
+- name: bind9
+  version: latest
+- name: haproxy
+  version: latest  

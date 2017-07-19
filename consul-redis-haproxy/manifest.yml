@@ -13,16 +13,6 @@ instance_groups:
     release: redis
     properties:
       password: ((redis-password))
-- name: bind
-  azs: [z1]
-  instances: 1
-  vm_type: default
-  stemcell: default
-  persistent_disk_type: default
-  networks: [{name: default}]
-  jobs:
-  - name: bind9
-    release: bind9
 - name: haproxy
   azs: [z1]
   instances: 1
@@ -32,6 +22,28 @@ instance_groups:
   networks: [{name: default}]
   jobs:
   - name: haproxy
+    release: haproxy
+- name: rabbitmq
+  azs: [z1]
+  instances: 1
+  vm_type: default
+  stemcell: default
+  persistent_disk_type: default
+  networks: [{name: default}]
+  jobs:
+  - name: rabbitmq
+    release: rabbitmq
+
+- name: ntp
+  azs: [z1]
+  instances: 1
+  vm_type: default
+  stemcell: default
+  persistent_disk_type: default
+  networks: [{name: default}]
+  jobs:
+  - name: ntp
+    release: ntp
 
 variables:
 - name: redis-password
@@ -52,7 +64,9 @@ stemcells:
 releases:
 - name: redis
   version: latest
-- name: bind9
-  version: latest
 - name: haproxy
-  version: latest  
+  version: latest
+- name: cf-rabbitmq
+  version: latest
+- name: ntp
+  version: latest

@@ -23,27 +23,6 @@ instance_groups:
   jobs:
   - name: haproxy
     release: haproxy
-- name: rabbitmq
-  azs: [z1]
-  instances: 1
-  vm_type: default
-  stemcell: default
-  persistent_disk_type: default
-  networks: [{name: default}]
-  jobs:
-  - name: rabbitmq
-    release: rabbitmq
-
-- name: ntp
-  azs: [z1]
-  instances: 1
-  vm_type: default
-  stemcell: default
-  persistent_disk_type: default
-  networks: [{name: default}]
-  jobs:
-  - name: ntp
-    release: ntp
 
 variables:
 - name: redis-password
@@ -65,8 +44,4 @@ releases:
 - name: redis
   version: latest
 - name: haproxy
-  version: latest
-- name: cf-rabbitmq
-  version: latest
-- name: ntp
   version: latest
